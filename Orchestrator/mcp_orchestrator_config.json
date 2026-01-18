@@ -1,0 +1,30 @@
+{
+  "rbac": {
+    "enabled": true,
+    "current_role": "admin",
+    "permissions_file": "tool_permissions.json"
+  },
+  "mcpServers": {
+    "notes-server": {
+      "command": "/Users/I527897/Desktop/Final_test/Washim_test/MCPS/.venv/bin/python3",
+      "args": ["/Users/I527897/Desktop/Final_test/Washim_test/MCPS/main.py"],
+      "cwd": "/Users/I527897/Desktop/Final_test/Washim_test/MCPS",
+      "enabled": true,
+      "description": "Simple notes taking MCP server"
+    },
+    "id-manager-server": {
+      "command": "/Users/I527897/Desktop/Final_test/Washim_test/Random_text_generator/.venv/bin/python3",
+      "args": ["/Users/I527897/Desktop/Final_test/Washim_test/Random_text_generator/main.py"],
+      "cwd": "/Users/I527897/Desktop/Final_test/Washim_test/Random_text_generator",
+      "enabled": true,
+      "description": "ID management server for adding/removing unique IDs from text"
+    },
+    "sonarqube-server": {
+      "command": "/Users/I527897/WASHIM/THE_FINAL_OPS_BOT_FULL_FLEDGED/sonarQube/.venv/bin/python3",
+      "args": ["/Users/I527897/WASHIM/THE_FINAL_OPS_BOT_FULL_FLEDGED/sonarQube/main.py"],
+      "cwd": "/Users/I527897/WASHIM/THE_FINAL_OPS_BOT_FULL_FLEDGED/sonarQube",
+      "enabled": true,
+      "description": "SonarQube MCP server for code quality analysis and management"
+    }
+  }
+}

@@ -1,0 +1,535 @@
+{
+  "description": "Role-based access control (RBAC) for MCP server tools. Defines which tools require admin privileges.",
+  "roles": {
+    "user": {
+      "description": "Standard user with read and safe operation access"
+    },
+    "admin": {
+      "description": "Administrator with full access including dangerous operations"
+    }
+  },
+  "tool_permissions": {
+    "sonarqube": {
+      "analyze_code_snippet": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Analyze a file or code snippet with SonarQube"
+      },
+      "analyze_file_list": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Analyze files in the current working directory"
+      },
+      "toggle_automatic_analysis": {
+        "allowed_roles": ["admin"],
+        "description": "Enable or disable automatic analysis"
+      },
+      "search_sonar_issues_in_projects": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Search for SonarQube issues in projects"
+      },
+      "change_sonar_issue_status": {
+        "allowed_roles": ["admin"],
+        "description": "Change the status of a SonarQube issue"
+      },
+      "search_my_sonarqube_projects": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Find SonarQube projects"
+      },
+      "list_quality_gates": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List all quality gates"
+      },
+      "get_project_quality_gate_status": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get quality gate status for a project"
+      },
+      "show_rule": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Show detailed information about a rule"
+      },
+      "list_rule_repositories": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List rule repositories"
+      },
+      "list_languages": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List supported programming languages"
+      },
+      "get_component_measures": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get SonarQube measures for a project"
+      },
+      "search_metrics": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Search for SonarQube metrics"
+      },
+      "get_raw_source": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get source code as raw text"
+      },
+      "get_scm_info": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get SCM information of source files"
+      },
+      "get_system_health": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get health status of SonarQube Server"
+      },
+      "get_system_status": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get state information about SonarQube Server"
+      },
+      "get_system_logs": {
+        "allowed_roles": ["admin"],
+        "description": "Get SonarQube Server system logs"
+      },
+      "ping_system": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Ping the SonarQube Server system"
+      },
+      "get_system_info": {
+        "allowed_roles": ["admin"],
+        "description": "Get detailed system configuration"
+      },
+      "create_webhook": {
+        "allowed_roles": ["admin"],
+        "description": "Create a new webhook"
+      },
+      "list_webhooks": {
+        "allowed_roles": ["admin"],
+        "description": "List all webhooks"
+      },
+      "list_portfolios": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List portfolios available in SonarQube"
+      },
+      "list_enterprises": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List enterprises available"
+      },
+      "search_dependency_risks": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Search for dependency risks"
+      }
+    },
+    "github": {
+      "add_comment_to_pending_review": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Add review comment to pending pull request review"
+      },
+      "add_issue_comment": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Add a comment to a specific issue"
+      },
+      "add_sub_issue": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Add a sub-issue to a parent issue"
+      },
+      "assign_copilot_to_issue": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Assign Copilot to a specific issue"
+      },
+      "create_branch": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Create a new branch"
+      },
+      "create_issue": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Create a new issue"
+      },
+      "create_or_update_file": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Create or update a file in repository"
+      },
+      "create_pull_request": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Create a new pull request"
+      },
+      "create_repository": {
+        "allowed_roles": ["admin"],
+        "description": "Create a new GitHub repository"
+      },
+      "delete_file": {
+        "allowed_roles": ["admin"],
+        "description": "Delete a file from repository"
+      },
+      "fork_repository": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Fork a GitHub repository"
+      },
+      "get_commit": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get details for a commit"
+      },
+      "get_file_contents": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get the contents of a file or directory"
+      },
+      "get_issue": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get details of a specific issue"
+      },
+      "get_issue_comments": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get comments for a specific issue"
+      },
+      "get_label": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get a specific label from repository"
+      },
+      "get_latest_release": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get the latest release"
+      },
+      "get_me": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get authenticated user details"
+      },
+      "get_release_by_tag": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get a specific release by tag name"
+      },
+      "get_tag": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get details about a specific git tag"
+      },
+      "get_team_members": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get member usernames of a team"
+      },
+      "get_teams": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get details of user's teams"
+      },
+      "list_branches": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List branches in repository"
+      },
+      "list_commits": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get list of commits of a branch"
+      },
+      "list_issue_types": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List supported issue types"
+      },
+      "list_issues": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List issues in repository"
+      },
+      "list_label": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List labels from repository or issue"
+      },
+      "list_pull_requests": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List pull requests in repository"
+      },
+      "list_releases": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List releases in repository"
+      },
+      "list_sub_issues": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List sub-issues for a specific issue"
+      },
+      "list_tags": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List git tags in repository"
+      },
+      "merge_pull_request": {
+        "allowed_roles": ["admin"],
+        "description": "Merge a pull request"
+      },
+      "pull_request_read": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get information on a specific pull request"
+      },
+      "pull_request_review_write": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Create/submit/delete pull request review"
+      },
+      "push_files": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Push multiple files in a single commit"
+      },
+      "remove_sub_issue": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Remove a sub-issue from parent issue"
+      },
+      "reprioritize_sub_issue": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Reprioritize a sub-issue"
+      },
+      "request_copilot_review": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Request GitHub Copilot code review"
+      },
+      "search_code": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Search for code across GitHub"
+      },
+      "search_issues": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Search for issues"
+      },
+      "search_pull_requests": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Search for pull requests"
+      },
+      "search_repositories": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Search for repositories"
+      },
+      "search_users": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Search for GitHub users"
+      },
+      "update_issue": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Update an existing issue"
+      },
+      "update_pull_request": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Update an existing pull request"
+      },
+      "update_pull_request_branch": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Update PR branch with latest changes"
+      }
+    },
+    "dockerhub": {
+      "listRepositoriesByNamespace": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List paginated repositories by namespace"
+      },
+      "createRepository": {
+        "allowed_roles": ["admin"],
+        "description": "Create a new repository"
+      },
+      "getRepositoryInfo": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get repository details"
+      },
+      "updateRepositoryInfo": {
+        "allowed_roles": ["admin"],
+        "description": "Update repository details"
+      },
+      "checkRepository": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Check if repository exists"
+      },
+      "listRepositoryTags": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List paginated tags by repository"
+      },
+      "getRepositoryTag": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get tag details"
+      },
+      "checkRepositoryTag": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Check if tag exists"
+      },
+      "listNamespaces": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List paginated namespaces"
+      },
+      "getPersonalNamespace": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get personal namespace name"
+      },
+      "listAllNamespacesMemberOf": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List all namespaces user is member of"
+      },
+      "search": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Search for repositories in Docker Hub"
+      },
+      "dockerHardenedImages": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List Docker Hardened Images"
+      }
+    },
+    "Kubernetes Controller": {
+      "get_pods": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get pods in namespace or all namespaces"
+      },
+      "get_deployments": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get deployments in namespace or all"
+      },
+      "get_services": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get services in namespace or all"
+      },
+      "get_namespaces": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get all namespaces in cluster"
+      },
+      "scale_deployment": {
+        "allowed_roles": ["admin"],
+        "description": "Scale a deployment to specified replicas"
+      },
+      "delete_pod": {
+        "allowed_roles": ["admin"],
+        "description": "Delete a specific pod"
+      },
+      "get_pod_logs": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get logs from a specific pod"
+      },
+      "restart_deployment": {
+        "allowed_roles": ["admin"],
+        "description": "Restart a deployment"
+      },
+      "apply_yaml": {
+        "allowed_roles": ["admin"],
+        "description": "Apply a Kubernetes YAML manifest"
+      },
+      "get_cluster_info": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get basic cluster information"
+      },
+      "get_events": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get recent cluster events"
+      },
+      "describe_pod": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get detailed pod information"
+      }
+    },
+    "jenkins-mcp-server": {
+      "health_check": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Check Jenkins MCP Server health"
+      },
+      "jenkins_list_jobs": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List all Jenkins jobs"
+      },
+      "jenkins_get_job_info": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get detailed job information"
+      },
+      "jenkins_create_job": {
+        "allowed_roles": ["admin"],
+        "description": "Create a new Jenkins job"
+      },
+      "jenkins_update_job_config": {
+        "allowed_roles": ["admin"],
+        "description": "Update job XML configuration"
+      },
+      "jenkins_copy_job": {
+        "allowed_roles": ["admin"],
+        "description": "Copy an existing job"
+      },
+      "jenkins_delete_job": {
+        "allowed_roles": ["admin"],
+        "description": "Delete a job permanently"
+      },
+      "jenkins_enable_job": {
+        "allowed_roles": ["admin"],
+        "description": "Enable a disabled job"
+      },
+      "jenkins_disable_job": {
+        "allowed_roles": ["admin"],
+        "description": "Disable a job"
+      },
+      "jenkins_build_job": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Trigger a build for a job"
+      },
+      "jenkins_get_build_info": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get detailed build information"
+      },
+      "jenkins_get_build_log": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get console output for a build"
+      },
+      "jenkins_stop_build": {
+        "allowed_roles": ["admin"],
+        "description": "Stop a running build"
+      },
+      "jenkins_get_build_artifacts": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get list of build artifacts"
+      },
+      "jenkins_get_queue_info": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get build queue information"
+      },
+      "jenkins_cancel_queue_item": {
+        "allowed_roles": ["admin"],
+        "description": "Cancel a queued build item"
+      },
+      "jenkins_list_nodes": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List all Jenkins nodes"
+      },
+      "jenkins_get_node_info": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get detailed node information"
+      },
+      "jenkins_toggle_node_offline": {
+        "allowed_roles": ["admin"],
+        "description": "Take a node online or offline"
+      },
+      "jenkins_list_plugins": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List Jenkins plugins"
+      },
+      "jenkins_get_plugin_info": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get detailed plugin information"
+      },
+      "jenkins_install_plugin": {
+        "allowed_roles": ["admin"],
+        "description": "Install a Jenkins plugin"
+      },
+      "jenkins_get_system_info": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get Jenkins system information"
+      },
+      "jenkins_quiet_down": {
+        "allowed_roles": ["admin"],
+        "description": "Put Jenkins into quiet-down mode"
+      },
+      "jenkins_cancel_quiet_down": {
+        "allowed_roles": ["admin"],
+        "description": "Cancel quiet-down mode"
+      },
+      "jenkins_restart": {
+        "allowed_roles": ["admin"],
+        "description": "Restart Jenkins server"
+      },
+      "jenkins_get_system_log": {
+        "allowed_roles": ["admin"],
+        "description": "Get Jenkins system log entries"
+      },
+      "jenkins_run_groovy_script": {
+        "allowed_roles": ["admin"],
+        "description": "Execute a Groovy script"
+      },
+      "jenkins_whoami": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get current authenticated user info"
+      },
+      "jenkins_get_user_info": {
+        "allowed_roles": ["user", "admin"],
+        "description": "Get information about a specific user"
+      },
+      "jenkins_list_users": {
+        "allowed_roles": ["user", "admin"],
+        "description": "List all Jenkins users"
+      }
+    }
+  },
+  "default_policy": {
+    "unknown_tools": "deny",
+    "description": "By default, unknown tools are denied for all roles"
+  }
+}

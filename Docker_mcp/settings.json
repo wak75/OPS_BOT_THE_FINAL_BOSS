@@ -1,0 +1,38 @@
+{
+  "mcpServers": {
+    "note": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--with",
+        "mcp[cli]",
+        "mcp",
+        "run",
+        "/Users/washim/washim/2025_Beast_Learn/MCP_GOD/mcp-server/main.py"
+      ]
+    },
+    
+    "Kubernetes Controller": {
+      "command": "/Users/washim/washim/2025_Beast_Learn/MCP_GOD/Kubernetes_mcp/kubeMCP/.venv/bin/python3",
+      "args": ["/Users/washim/washim/2025_Beast_Learn/MCP_GOD/Kubernetes_mcp/kubeMCP/main.py"],
+      "env": {
+        "KUBECONFIG": "/Users/washim/.kube/config"
+        }
+      },
+      
+      "docker-engine": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--with",
+        "fastmcp",
+        "python",
+        "/Users/washim/washim/ALL_PYTHON_PROJECTS/Docker_MCP/main.py"
+      ]
+    }
+
+
+    }
+
+
+}

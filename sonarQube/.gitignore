@@ -1,0 +1,4 @@
+sonarqube_data/
+sonarqube_logs/
+sonarqube_extensions/
+postgres_data/
