@@ -1,0 +1,95 @@
+version: '3.8'
+
+# Development configuration for Jenkins MCP Server
+services:
+  jenkins-mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: jenkins-mcp-server-dev
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+      - "5678:5678"  # Debug port
+    environment:
+      - JENKINS_URL=http://host.docker.internal:8080
+      - JENKINS_USERNAME=${JENKINS_USERNAME:-admin}
+      - JENKINS_TOKEN=${JENKINS_TOKEN}
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=8000
+      - LOG_LEVEL=DEBUG
+      - DEBUG=true
+      - PYTHONPATH=/app
+    volumes:
+      # Mount source code for hot reloading
+      - ./src:/app/src
+      - ./tests:/app/tests
+      - jenkins_mcp_logs_dev:/app/logs
+      - ./config:/app/config:ro
+    networks:
+      - jenkins-network-dev
+    depends_on:
+      - jenkins
+    command: ["python", "-m", "debugpy", "--listen", "0.0.0.0:5678", "--wait-for-client", "-m", "jenkins_mcp_server.main"]
+
+  jenkins:
+    image: jenkins/jenkins:2.426.1-lts
+    container_name: jenkins-dev
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false -Xmx2g
+      - JENKINS_OPTS=--httpPort=8080
+    volumes:
+      - jenkins_home_dev:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # Mount custom Jenkins configuration for development
+      - ./dev/jenkins/plugins.txt:/usr/share/jenkins/ref/plugins.txt:ro
+      - ./dev/jenkins/init.groovy.d:/usr/share/jenkins/ref/init.groovy.d:ro
+    networks:
+      - jenkins-network-dev
+
+  # Development database for testing
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres-dev
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=jenkins_mcp_dev
+      - POSTGRES_USER=jenkins_mcp
+      - POSTGRES_PASSWORD=dev_password
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    networks:
+      - jenkins-network-dev
+
+  # Redis for caching in development
+  redis:
+    image: redis:7-alpine
+    container_name: redis-dev
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data_dev:/data
+    networks:
+      - jenkins-network-dev
+
+volumes:
+  jenkins_home_dev:
+    driver: local
+  jenkins_mcp_logs_dev:
+    driver: local
+  postgres_data_dev:
+    driver: local
+  redis_data_dev:
+    driver: local
+
+networks:
+  jenkins-network-dev:
+    driver: bridge

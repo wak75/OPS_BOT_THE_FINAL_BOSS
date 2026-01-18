@@ -1,0 +1,231 @@
+version: '3.8'
+
+# Production configuration for Jenkins MCP Server
+services:
+  jenkins-mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: jenkins-mcp-server-prod
+    restart: always
+    environment:
+      - JENKINS_URL=${JENKINS_URL}
+      - JENKINS_USERNAME=${JENKINS_USERNAME}
+      - JENKINS_TOKEN=${JENKINS_TOKEN}
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=8000
+      - LOG_LEVEL=INFO
+      - DEBUG=false
+    volumes:
+      - jenkins_mcp_logs_prod:/app/logs
+      - jenkins_mcp_config_prod:/app/config:ro
+    networks:
+      - jenkins-network-prod
+    depends_on:
+      - jenkins
+      - postgres
+      - redis
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  jenkins:
+    image: jenkins/jenkins:2.426.1-lts
+    container_name: jenkins-prod
+    restart: always
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false -Xmx4g -Xms2g
+      - JENKINS_OPTS=--httpPort=8080
+    volumes:
+      - jenkins_home_prod:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - jenkins-network-prod
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/login"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # Production database
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres-prod
+    restart: always
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-jenkins_mcp}
+      - POSTGRES_USER=${POSTGRES_USER:-jenkins_mcp}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+      - ./backups/postgres:/backups
+    networks:
+      - jenkins-network-prod
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-jenkins_mcp}"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # Redis for caching and session management
+  redis:
+    image: redis:7-alpine
+    container_name: redis-prod
+    restart: always
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data_prod:/data
+    networks:
+      - jenkins-network-prod
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # Nginx reverse proxy with SSL
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-prod
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - nginx_logs:/var/log/nginx
+    networks:
+      - jenkins-network-prod
+    depends_on:
+      - jenkins
+      - jenkins-mcp-server
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # Monitoring with Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus-prod
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - jenkins-network-prod
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+
+  # Grafana for visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-prod
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    networks:
+      - jenkins-network-prod
+    depends_on:
+      - prometheus
+
+volumes:
+  jenkins_home_prod:
+    driver: local
+  jenkins_mcp_logs_prod:
+    driver: local
+  jenkins_mcp_config_prod:
+    driver: local
+  postgres_data_prod:
+    driver: local
+  redis_data_prod:
+    driver: local
+  nginx_logs:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+networks:
+  jenkins-network-prod:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
+
+# Production secrets (use Docker secrets in swarm mode)
+secrets:
+  jenkins_token:
+    external: true
+  postgres_password:
+    external: true
+  redis_password:
+    external: true
+  grafana_password:
+    external: true

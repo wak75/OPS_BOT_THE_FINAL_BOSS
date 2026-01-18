@@ -1,0 +1,319 @@
+{
+  "name": "jenkins-mcp-server",
+  "description": "Comprehensive Jenkins MCP Server with tools, resources, and prompts for complete Jenkins automation and management",
+  "version": "1.0.0",
+  "author": "Jenkins MCP Team",
+  "license": "MIT",
+  "homepage": "https://github.com/your-org/jenkins-mcp-server",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/jenkins-mcp-server.git"
+  },
+  "mcp": {
+    "server": {
+      "command": "python",
+      "args": ["-m", "jenkins_mcp_server.main"],
+      "env": {
+        "JENKINS_URL": "http://localhost:8080",
+        "JENKINS_USERNAME": "admin",
+        "JENKINS_TOKEN": "your_jenkins_api_token",
+        "LOG_LEVEL": "INFO"
+      }
+    },
+    "capabilities": {
+      "tools": [
+        {
+          "name": "create_job",
+          "description": "Create a new Jenkins job with specified configuration"
+        },
+        {
+          "name": "get_job",
+          "description": "Retrieve information about a specific Jenkins job"
+        },
+        {
+          "name": "update_job",
+          "description": "Update an existing Jenkins job configuration"
+        },
+        {
+          "name": "delete_job",
+          "description": "Delete a Jenkins job"
+        },
+        {
+          "name": "list_jobs",
+          "description": "List all Jenkins jobs with optional filtering"
+        },
+        {
+          "name": "enable_job",
+          "description": "Enable a disabled Jenkins job"
+        },
+        {
+          "name": "disable_job",
+          "description": "Disable a Jenkins job"
+        },
+        {
+          "name": "build_job",
+          "description": "Trigger a build for a specific Jenkins job"
+        },
+        {
+          "name": "get_build",
+          "description": "Get information about a specific build"
+        },
+        {
+          "name": "stop_build",
+          "description": "Stop a running build"
+        },
+        {
+          "name": "get_build_log",
+          "description": "Retrieve the console output for a build"
+        },
+        {
+          "name": "list_builds",
+          "description": "List builds for a specific job"
+        },
+        {
+          "name": "get_build_artifacts",
+          "description": "Get artifacts from a specific build"
+        },
+        {
+          "name": "get_test_results",
+          "description": "Get test results for a build"
+        },
+        {
+          "name": "list_nodes",
+          "description": "List all Jenkins nodes (agents)"
+        },
+        {
+          "name": "get_node",
+          "description": "Get information about a specific node"
+        },
+        {
+          "name": "create_node",
+          "description": "Create a new Jenkins node"
+        },
+        {
+          "name": "delete_node",
+          "description": "Delete a Jenkins node"
+        },
+        {
+          "name": "enable_node",
+          "description": "Enable a disabled node"
+        },
+        {
+          "name": "disable_node",
+          "description": "Disable a node temporarily"
+        },
+        {
+          "name": "list_plugins",
+          "description": "List all installed Jenkins plugins"
+        },
+        {
+          "name": "install_plugin",
+          "description": "Install a new Jenkins plugin"
+        },
+        {
+          "name": "uninstall_plugin",
+          "description": "Uninstall a Jenkins plugin"
+        },
+        {
+          "name": "update_plugin",
+          "description": "Update a Jenkins plugin to latest version"
+        },
+        {
+          "name": "get_system_info",
+          "description": "Get Jenkins system information and status"
+        },
+        {
+          "name": "get_version_info",
+          "description": "Get Jenkins version and environment information"
+        },
+        {
+          "name": "restart_jenkins",
+          "description": "Restart Jenkins server safely"
+        },
+        {
+          "name": "quiet_down",
+          "description": "Put Jenkins in quiet mode"
+        },
+        {
+          "name": "cancel_quiet_down",
+          "description": "Cancel quiet mode"
+        },
+        {
+          "name": "run_groovy_script",
+          "description": "Execute a Groovy script on Jenkins"
+        },
+        {
+          "name": "list_users",
+          "description": "List all Jenkins users"
+        },
+        {
+          "name": "create_user",
+          "description": "Create a new Jenkins user"
+        },
+        {
+          "name": "delete_user",
+          "description": "Delete a Jenkins user"
+        },
+        {
+          "name": "get_user",
+          "description": "Get information about a specific user"
+        }
+      ],
+      "resources": [
+        {
+          "name": "job_config",
+          "description": "Access Jenkins job configurations in XML format"
+        },
+        {
+          "name": "build_log",
+          "description": "Access build console logs with formatting"
+        },
+        {
+          "name": "build_artifact",
+          "description": "Access build artifacts and files"
+        },
+        {
+          "name": "workspace_file",
+          "description": "Access files from job workspaces"
+        },
+        {
+          "name": "system_metrics",
+          "description": "Access Jenkins system metrics and performance data"
+        }
+      ],
+      "prompts": [
+        {
+          "name": "troubleshoot_jenkins_issue",
+          "description": "Get troubleshooting guide for common Jenkins issues"
+        },
+        {
+          "name": "jenkins_error_analysis",
+          "description": "Analyze Jenkins error messages and provide solutions"
+        },
+        {
+          "name": "performance_optimization_guide",
+          "description": "Get performance optimization recommendations"
+        },
+        {
+          "name": "jenkins_best_practices",
+          "description": "Get comprehensive Jenkins best practices guide"
+        },
+        {
+          "name": "pipeline_best_practices",
+          "description": "Get pipeline-specific best practices and patterns"
+        },
+        {
+          "name": "security_best_practices",
+          "description": "Get Jenkins security best practices and guidelines"
+        },
+        {
+          "name": "plugin_management_guide",
+          "description": "Get plugin management best practices"
+        },
+        {
+          "name": "pipeline_template",
+          "description": "Get Jenkins pipeline templates for common scenarios"
+        },
+        {
+          "name": "job_dsl_template",
+          "description": "Get Job DSL templates for job creation"
+        },
+        {
+          "name": "dockerfile_template",
+          "description": "Get Dockerfile templates for Jenkins agents"
+        },
+        {
+          "name": "kubernetes_template",
+          "description": "Get Kubernetes templates for Jenkins deployment"
+        },
+        {
+          "name": "jenkins_security_checklist",
+          "description": "Get comprehensive security checklist for Jenkins"
+        },
+        {
+          "name": "jenkins_compliance_guidelines",
+          "description": "Get compliance guidelines for various regulations"
+        },
+        {
+          "name": "jenkins_migration_guide",
+          "description": "Get comprehensive migration guide for Jenkins"
+        },
+        {
+          "name": "jenkins_upgrade_checklist",
+          "description": "Get upgrade checklist and procedures for Jenkins"
+        }
+      ]
+    }
+  },
+  "configuration": {
+    "required": [
+      "JENKINS_URL",
+      "JENKINS_USERNAME",
+      "JENKINS_TOKEN"
+    ],
+    "optional": [
+      "LOG_LEVEL",
+      "DEBUG",
+      "SERVER_HOST",
+      "SERVER_PORT"
+    ]
+  },
+  "examples": {
+    "tools": [
+      {
+        "name": "create_job",
+        "description": "Create a simple freestyle job",
+        "usage": "create_job('my-job', job_type='freestyle', description='My first job')"
+      },
+      {
+        "name": "build_job",
+        "description": "Trigger a build with parameters",
+        "usage": "build_job('my-job', parameters={'BRANCH': 'main', 'DEPLOY': 'true'})"
+      },
+      {
+        "name": "get_build_log",
+        "description": "Get the console output from a build",
+        "usage": "get_build_log('my-job', 42, start=0, lines=100)"
+      }
+    ],
+    "resources": [
+      {
+        "name": "job_config",
+        "description": "Access job configuration",
+        "usage": "jenkins://job_config/my-job"
+      },
+      {
+        "name": "build_log",
+        "description": "Access build log",
+        "usage": "jenkins://build_log/my-job/42"
+      },
+      {
+        "name": "build_artifact",
+        "description": "Access build artifact",
+        "usage": "jenkins://build_artifact/my-job/42/path/to/artifact.jar"
+      }
+    ],
+    "prompts": [
+      {
+        "name": "troubleshoot_jenkins_issue",
+        "description": "Get help with Jenkins issues",
+        "usage": "troubleshoot_jenkins_issue(issue_type='build_failure', symptoms=['red build', 'compilation error'])"
+      },
+      {
+        "name": "pipeline_template",
+        "description": "Get a pipeline template",
+        "usage": "pipeline_template(type='nodejs', features=['testing', 'deployment'])"
+      }
+    ]
+  },
+  "documentation": {
+    "setup": "https://github.com/your-org/jenkins-mcp-server/blob/main/README.md#setup",
+    "api": "https://github.com/your-org/jenkins-mcp-server/blob/main/docs/api.md",
+    "examples": "https://github.com/your-org/jenkins-mcp-server/blob/main/docs/examples.md"
+  },
+  "support": {
+    "issues": "https://github.com/your-org/jenkins-mcp-server/issues",
+    "discussions": "https://github.com/your-org/jenkins-mcp-server/discussions",
+    "email": "support@your-org.com"
+  }
+}
