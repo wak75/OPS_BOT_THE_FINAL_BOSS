@@ -1,0 +1,33 @@
+sequenceDiagram
+    participant User
+    participant AI as AI Agent
+    participant Orch as Orchestrator
+    participant Jenkins as Jenkins MCP
+    participant K8s as K8s MCP
+    participant Docker as Docker MCP
+    participant Sonar as SonarQube MCP
+    
+    User->>AI: "Deploy microservice-one v1.0.0"
+    AI->>Orch: Parse & Route Request
+    
+    Orch->>Orch: Check RBAC Permissions
+    Orch->>Jenkins: Trigger Build Pipeline
+    Jenkins-->>Orch: Build Started (Job #24)
+    
+    Orch->>Jenkins: Monitor Build Progress
+    Jenkins-->>Orch: Build Completed ✓
+    
+    Orch->>Sonar: Get Quality Gate Status
+    Sonar-->>Orch: Quality Gate: PASSED ✓
+    
+    Orch->>Docker: Verify Image Exists
+    Docker-->>Orch: Image Found: was24/microservice-one:1.0.0
+    
+    Orch->>K8s: Apply Deployment (2 replicas)
+    K8s-->>Orch: Deployment Created
+    
+    Orch->>K8s: Check Pod Status
+    K8s-->>Orch: 2/2 Pods Running ✓
+    
+    Orch->>AI: Deployment Complete
+    AI->>User: ✓ Successfully deployed!<br/>• Build: #24 (SUCCESS)<br/>• Quality: PASSED<br/>• Pods: 2/2 Running<br/>• Service: NodePort 30001

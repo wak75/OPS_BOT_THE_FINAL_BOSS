@@ -17,6 +17,8 @@ import time
 import threading
 import queue
 import httpx
+from intelligent_planner import IntelligentTaskPlanner
+from task_executor_enhanced import EnhancedTaskExecutor
 
 # Initialize the MCP server
 mcp = FastMCP("MCP Orchestrator")
@@ -485,6 +487,11 @@ class MCPOrchestrator:
 
 # Global orchestrator instance
 orchestrator = MCPOrchestrator()
+
+# Global intelligent planner and executor instances
+task_planner = None
+task_executor = None
+pending_plan = None
 
 @mcp.tool()
 def load_orchestrator_config() -> str:
@@ -1117,6 +1124,182 @@ def reload_permissions() -> str:
         return f"Permissions reloaded successfully. {tool_count} tools configured across {len(orchestrator.permissions.get('tool_permissions', {}))} servers."
     except Exception as e:
         return f"Error reloading permissions: {str(e)}"
+
+@mcp.tool()
+def create_intelligent_task_plan(user_command: str) -> str:
+    """
+    🧠 INTELLIGENT TASK PLANNER
+    
+    Creates an enterprise-grade task roadmap by analyzing all available MCP servers
+    and their tools to determine the most suitable, compliant way to achieve your command.
+    
+    This is the FIRST step in the workflow - it creates a detailed plan and asks for
+    your approval before executing anything.
+    
+    Features:
+    1. 📊 Analyzes ALL available MCPs and their tools
+    2. 🎯 Understands your intent (deploy, rollback, scale, etc.)
+    3. 🏢 Creates enterprise-grade, compliant execution plans
+    4. ⚖️ Automatically assesses risk levels
+    5. 🔒 Includes compliance requirements
+    6. 🔄 Provides rollback strategies
+    7. ⚠️  Identifies which operations need approval
+    8. 📋 Creates step-by-step roadmap
+    
+    Args:
+        user_command: Natural language command describing what you want to accomplish
+    
+    Examples:
+        - "Deploy the code to prod"
+        - "Deploy microservice-one to production" 
+        - "URGENT: Deploy hotfix to production NOW"
+        - "Rollback production deployment"
+        - "Scale app in staging to 5 replicas"
+    
+    Workflow:
+        Step 1: Use this tool to create the plan ← YOU ARE HERE
+        Step 2: Review the generated plan
+        Step 3: Use 'execute_approved_plan' to run it (if you approve)
+    
+    Returns:
+        Detailed task plan with all steps, risks, compliance requirements,
+        and a question asking if you want to proceed.
+    """
+    global task_planner, pending_plan
+    
+    try:
+        # Initialize planner if needed
+        if task_planner is None:
+            task_planner = IntelligentTaskPlanner(orchestrator)
+        
+        # Analyze intent
+        intent = task_planner.analyze_user_intent(user_command)
+        
+        if not intent["action"]:
+            return "❌ Unable to understand the requested action.\n\nPlease specify what you'd like to do:\n  • Deploy/deployment/release\n  • Rollback/revert\n  • Scale/scaling\n  • Build\n  • Test\n\nExample: 'Deploy microservice-one to production'"
+        
+        # Get available capabilities
+        capabilities = task_planner.get_available_capabilities()
+        
+        if not capabilities:
+            return "❌ No MCP servers are currently running.\n\nPlease start servers first using 'start_all_enabled_servers' tool."
+        
+        # Create the plan
+        plan = task_planner.create_deployment_plan(intent, capabilities)
+        
+        # Store for later execution
+        pending_plan = plan
+        
+        # Format and return
+        formatted_plan = task_planner.format_plan_for_display(plan)
+        
+        formatted_plan += "\n\n💡 To execute this plan, use the 'execute_approved_plan' tool with approval=true"
+        
+        return formatted_plan
+        
+    except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        return f"❌ Error creating task plan: {str(e)}\n\nDetails:\n{error_details}\n\nPlease ensure MCP servers are running and try again."
+
+@mcp.tool()
+def execute_approved_plan(approval: bool = False) -> str:
+    """
+    Execute the pending task plan that was created by 'create_intelligent_task_plan'.
+    
+    This is the SECOND step in the workflow - after reviewing the plan created by
+    create_intelligent_task_plan, use this tool to execute it.
+    
+    Args:
+        approval: Must be set to true to execute. This is a safety mechanism to
+                 ensure you've reviewed the plan before execution.
+    
+    Workflow:
+        Step 1: create_intelligent_task_plan → Creates the roadmap
+        Step 2: Review the plan carefully
+        Step 3: execute_approved_plan(approval=true) ← YOU ARE HERE
+    
+    Returns:
+        Execution summary with results of each step
+    
+    Safety Features:
+        - Requires explicit approval=true
+        - Stops on first error
+        - Automatic rollback on failure
+        - Complete audit trail
+        - Real-time progress updates
+    """
+    global pending_plan, task_executor
+    
+    if pending_plan is None:
+        return "❌ No pending plan to execute.\n\nPlease create a plan first using 'create_intelligent_task_plan' tool."
+    
+    if not approval:
+        return "❌ Execution requires explicit approval.\n\nTo proceed, call this tool with approval=true:\n  execute_approved_plan(approval=true)"
+    
+    try:
+        # Initialize executor if needed
+        if task_executor is None:
+            task_executor = EnhancedTaskExecutor(orchestrator)
+        
+        # Execute the plan
+        results = task_executor.execute_plan(pending_plan, user_approval=True)
+        
+        # Format results
+        summary = task_executor.format_execution_summary(results)
+        
+        # Clear pending plan after execution
+        if results["status"] in ["completed", "failed"]:
+            pending_plan = None
+        
+        return summary
+        
+    except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        return f"❌ Error executing plan: {str(e)}\n\nDetails:\n{error_details}"
+
+@mcp.tool()
+def cancel_pending_plan() -> str:
+    """
+    Cancel the current pending task plan without executing it.
+    
+    Use this if you've reviewed the plan and decided not to proceed.
+    
+    Returns:
+        Confirmation message
+    """
+    global pending_plan
+    
+    if pending_plan is None:
+        return "No pending plan to cancel."
+    
+    plan_id = pending_plan.plan_id
+    pending_plan = None
+    
+    return f"✅ Cancelled pending plan: {plan_id}"
+
+@mcp.tool()
+def show_pending_plan() -> str:
+    """
+    Show the current pending task plan (if any).
+    
+    Returns:
+        The pending plan or message if no plan exists
+    """
+    global pending_plan, task_planner
+    
+    if pending_plan is None:
+        return "No pending plan. Create one using 'create_intelligent_task_plan' tool."
+    
+    if task_planner is None:
+        return "Task planner not initialized."
+    
+    formatted_plan = task_planner.format_plan_for_display(pending_plan)
+    formatted_plan += "\n\n💡 To execute, use: execute_approved_plan(approval=true)"
+    formatted_plan += "\n💡 To cancel, use: cancel_pending_plan()"
+    
+    return formatted_plan
 
 def cleanup_on_exit():
     """Cleanup function to stop all servers on exit."""

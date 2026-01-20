@@ -1,0 +1,67 @@
+graph TB
+    subgraph "Source Control"
+        GIT_ONE[Git: Microservice-One]
+        GIT_TWO[Git: Microservice-Two]
+    end
+    
+    subgraph "CI/CD Pipeline"
+        JENKINS_PIPELINE[Jenkins Pipelines]
+        SONAR_QUALITY[SonarQube Analysis]
+    end
+    
+    subgraph "Container Registry"
+        DOCKER_ONE[was24/microservice-one:1.0.0]
+        DOCKER_TWO[was24/microservice-two:1.0.0]
+    end
+    
+    subgraph "Kubernetes Cluster"
+        subgraph "Microservice One"
+            POD1_1[Pod 1]
+            POD1_2[Pod 2]
+            SVC1[Service<br/>NodePort: 30001]
+        end
+        
+        subgraph "Microservice Two"
+            POD2_1[Pod 1]
+            POD2_2[Pod 2]
+            SVC2[Service<br/>NodePort: 30002]
+        end
+        
+        INGRESS[Ingress Controller]
+    end
+    
+    subgraph "Monitoring"
+        HEALTH[Health Checks]
+        LOGS[Centralized Logging]
+        METRICS[Metrics Collection]
+    end
+    
+    GIT_ONE --> JENKINS_PIPELINE
+    GIT_TWO --> JENKINS_PIPELINE
+    
+    JENKINS_PIPELINE --> SONAR_QUALITY
+    SONAR_QUALITY --> DOCKER_ONE
+    SONAR_QUALITY --> DOCKER_TWO
+    
+    DOCKER_ONE --> POD1_1
+    DOCKER_ONE --> POD1_2
+    DOCKER_TWO --> POD2_1
+    DOCKER_TWO --> POD2_2
+    
+    POD1_1 --> SVC1
+    POD1_2 --> SVC1
+    POD2_1 --> SVC2
+    POD2_2 --> SVC2
+    
+    SVC1 --> INGRESS
+    SVC2 --> INGRESS
+    
+    POD1_1 & POD1_2 & POD2_1 & POD2_2 --> HEALTH
+    POD1_1 & POD1_2 & POD2_1 & POD2_2 --> LOGS
+    POD1_1 & POD1_2 & POD2_1 & POD2_2 --> METRICS
+    
+    style JENKINS_PIPELINE fill:#e3f2fd
+    style SONAR_QUALITY fill:#f3e5f5
+    style DOCKER_ONE fill:#e1f5ff
+    style DOCKER_TWO fill:#e1f5ff
+    style INGRESS fill:#fff3e0

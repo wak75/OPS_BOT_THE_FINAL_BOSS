@@ -1,0 +1,59 @@
+graph TB
+    subgraph "User Layer"
+        U1[👤 DevOps Engineer]
+        U2[👤 Developer]
+        U3[👤 QA Engineer]
+        U4[👤 Manager]
+    end
+    
+    subgraph "AI Interface Layer"
+        AI[🤖 AI Agent<br/>Claude/GPT-4]
+        NLP[Natural Language<br/>Processing]
+    end
+    
+    subgraph "Orchestrator Core"
+        ORCH[🎯 MCP Orchestrator]
+        ROUTER[Intelligent Router]
+        RBAC[RBAC Engine]
+        AUTH[Authentication]
+        CACHE[Context Cache]
+    end
+    
+    subgraph "MCP Server Layer"
+        JENKINS_MCP[🔧 Jenkins MCP]
+        K8S_MCP[☸️ Kubernetes MCP]
+        DOCKER_MCP[🐳 Docker Hub MCP]
+        SONAR_MCP[📊 SonarQube MCP]
+        FUTURE[➕ Future MCPs]
+    end
+    
+    subgraph "Tool Infrastructure"
+        JENKINS[Jenkins CI/CD]
+        K8S[Kubernetes Cluster]
+        DOCKER[Docker Hub Registry]
+        SONAR[SonarQube Server]
+    end
+    
+    U1 & U2 & U3 & U4 --> AI
+    AI --> NLP
+    NLP --> ORCH
+    ORCH --> ROUTER
+    ORCH --> RBAC
+    ORCH --> AUTH
+    ORCH --> CACHE
+    
+    ROUTER --> JENKINS_MCP
+    ROUTER --> K8S_MCP
+    ROUTER --> DOCKER_MCP
+    ROUTER --> SONAR_MCP
+    ROUTER --> FUTURE
+    
+    JENKINS_MCP --> JENKINS
+    K8S_MCP --> K8S
+    DOCKER_MCP --> DOCKER
+    SONAR_MCP --> SONAR
+    
+    style AI fill:#e1f5ff
+    style ORCH fill:#fff3e0
+    style ROUTER fill:#f3e5f5
+    style RBAC fill:#ffebee

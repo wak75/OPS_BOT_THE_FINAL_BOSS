@@ -64,7 +64,7 @@ Jenkins/jenkins_home/caches/
 Jenkins/jenkins_home/fingerprints/
 Jenkins/jenkins_home/logs/*.log
 Jenkins/jenkins_home/*.log
-Jenkins/JENKINS_MCP/.git/
+
 
 # SonarQube Data
 sonarQube/postgres_data/

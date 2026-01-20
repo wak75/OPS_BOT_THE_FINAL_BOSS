@@ -1,0 +1,47 @@
+graph TD
+    START([Developer Commits Code])
+    
+    START --> GIT[Git Push to Repository]
+    GIT --> WEBHOOK[GitHub Webhook Triggered]
+    
+    WEBHOOK --> OPS1{OPS Bot<br/>Orchestrator}
+    
+    OPS1 --> JENKINS1[Trigger Jenkins Build]
+    JENKINS1 --> BUILD[Build Application]
+    BUILD --> TEST[Run Unit Tests]
+    
+    TEST --> TEST_RESULT{Tests Pass?}
+    TEST_RESULT -->|Yes| OPS2{OPS Bot}
+    TEST_RESULT -->|No| NOTIFY_FAIL[Notify Developer]
+    
+    OPS2 --> SONAR1[Trigger SonarQube Scan]
+    SONAR1 --> ANALYZE[Analyze Code Quality]
+    
+    ANALYZE --> GATE_RESULT{Quality Gate<br/>Passed?}
+    GATE_RESULT -->|No| NOTIFY_FAIL
+    GATE_RESULT -->|Yes| OPS3{OPS Bot}
+    
+    OPS3 --> DOCKER_BUILD[Build Docker Image]
+    DOCKER_BUILD --> DOCKER_TAG[Tag Image]
+    DOCKER_TAG --> OPS4{OPS Bot}
+    
+    OPS4 --> DOCKER_PUSH[Push to DockerHub]
+    DOCKER_PUSH --> OPS5{OPS Bot}
+    
+    OPS5 --> K8S_DEPLOY[Deploy to Kubernetes]
+    K8S_DEPLOY --> VERIFY[Verify Deployment]
+    
+    VERIFY --> HEALTH_CHECK{Health<br/>Check?}
+    HEALTH_CHECK -->|Fail| ROLLBACK[Rollback Deployment]
+    HEALTH_CHECK -->|Pass| SUCCESS[✓ Deployment Success]
+    
+    ROLLBACK --> NOTIFY_FAIL
+    SUCCESS --> NOTIFY_SUCCESS[Notify Team]
+    
+    style OPS1 fill:#fff3e0
+    style OPS2 fill:#fff3e0
+    style OPS3 fill:#fff3e0
+    style OPS4 fill:#fff3e0
+    style OPS5 fill:#fff3e0
+    style SUCCESS fill:#c8e6c9
+    style NOTIFY_FAIL fill:#ffcdd2

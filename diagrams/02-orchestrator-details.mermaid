@@ -1,0 +1,45 @@
+graph LR
+    subgraph "Request Flow"
+        REQ[User Request]
+        PARSE[Request Parser]
+        VALIDATE[Validator]
+    end
+    
+    subgraph "Orchestrator Brain"
+        INTENT[Intent Recognition]
+        PERM[Permission Check]
+        ROUTE[Route Decision]
+        COORD[Multi-Tool Coordinator]
+    end
+    
+    subgraph "Execution Layer"
+        EXEC[Execution Engine]
+        RETRY[Retry Handler]
+        ERROR[Error Handler]
+        LOG[Logger]
+    end
+    
+    subgraph "Response Layer"
+        FORMAT[Response Formatter]
+        CONTEXT[Context Manager]
+        AUDIT[Audit Trail]
+    end
+    
+    REQ --> PARSE
+    PARSE --> VALIDATE
+    VALIDATE --> INTENT
+    INTENT --> PERM
+    PERM --> ROUTE
+    ROUTE --> COORD
+    COORD --> EXEC
+    EXEC --> RETRY
+    EXEC --> ERROR
+    EXEC --> LOG
+    EXEC --> FORMAT
+    FORMAT --> CONTEXT
+    FORMAT --> AUDIT
+    
+    style INTENT fill:#e8f5e9
+    style PERM fill:#ffebee
+    style EXEC fill:#e3f2fd
+    style FORMAT fill:#f3e5f5
